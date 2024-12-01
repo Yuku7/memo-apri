@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="jn">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -139,6 +139,18 @@
     const matchMessage = document.getElementById('match-message');
     const resetButton = document.getElementById('reset-button');
 
+    // LocalStorageからデータを復元
+    function loadInputs() {
+      athleteMemo.value = localStorage.getItem('athleteMemo') || '';
+      volunteerMemo.value = localStorage.getItem('volunteerMemo') || '';
+    }
+
+    // LocalStorageにデータを保存
+    function saveInputs() {
+      localStorage.setItem('athleteMemo', athleteMemo.value.trim());
+      localStorage.setItem('volunteerMemo', volunteerMemo.value.trim());
+    }
+
     // マッチングボタンのクリックイベント
     matchButton.addEventListener('click', () => {
       const athleteText = athleteMemo.value.trim(); // 選手メモのテキスト
@@ -148,6 +160,9 @@
         alert('選手とボランティアのメモを両方入力してください！');
         return;
       }
+
+      // データを保存
+      saveInputs();
 
       // 類似度を計算
       const similarity = calculateSimilarity(athleteText, volunteerText);
@@ -168,7 +183,12 @@
       athleteMemo.value = '';
       volunteerMemo.value = '';
       matchResults.style.display = 'none';
+      localStorage.removeItem('athleteMemo');
+      localStorage.removeItem('volunteerMemo');
     });
+
+    // ページロード時に入力を復元
+    window.addEventListener('DOMContentLoaded', loadInputs);
   </script>
 </body>
 </html>
